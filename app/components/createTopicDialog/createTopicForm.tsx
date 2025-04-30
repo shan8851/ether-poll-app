@@ -7,14 +7,14 @@
 'use client'
 
 import { useForm, useFieldArray } from 'react-hook-form'
-import { usePinJson } from '../hooks/usePinJson'
+import { usePinJson } from '../../hooks/usePinJson'
 import {
   useAccount,
   useWriteContract,
   useWaitForTransactionReceipt,
 } from 'wagmi'
 import type { Abi, Address } from 'abitype'
-import fullAbi from '../abis/EtherPoll.json'
+import fullAbi from '../../abis/EtherPoll.json'
 import { sepolia } from 'viem/chains'
 import { DateTime } from 'luxon'
 
@@ -28,9 +28,9 @@ interface FormValues {
   links: LinkItem[]
 }
 
-const POLL_ABI: Abi = fullAbi.abi as Abi
-const POLL_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as Address
-const MAX_WINDOW_S = 90 * 24 * 60 * 60    // 90 days
+const ABI: Abi = fullAbi.abi as Abi
+const ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as Address
+const MAX_S = 90 * 24 * 60 * 60    // 90 days
 
 /* ─────────────────────────────────────────────────── component ───────── */
 export function CreateTopicForm() {
@@ -76,39 +76,36 @@ export function CreateTopicForm() {
   })
 
   /* ─────────────────────────────────────────── submit handler ───────── */
-  const onSubmit = handleSubmit(async (values) => {
-    if (!address) throw new Error('Connect your wallet first')
+  const onSubmit = handleSubmit(async (v) => {
+    if (!address) throw new Error('Connect your wallet');
 
-    const nowS = Math.floor(DateTime.now().toSeconds())
+    const nowS = Math.floor(DateTime.now().toSeconds());
     const endS = Math.floor(
-      DateTime.fromISO(values.endDate, { zone: 'utc' })
-        .endOf('day')
-        .toSeconds(),
-    )
+      DateTime.fromISO(v.endDate, { zone: 'utc' }).endOf('day').toSeconds()
+    );
+    const duration = endS - nowS;
 
-    if (endS <= nowS)
-      throw new Error('End date must be in the future')
-    if (endS - nowS > MAX_WINDOW_S)
-      throw new Error('End date must be within 90 days')
+    if (duration <= 0) throw new Error('End date in the past');
+    if (duration > MAX_S) throw new Error('End date must be ≤ 90 days');
 
     const res = await pinJson({
-      title:       values.title,
-      description: values.description,
-      links:       values.links,
-    })
-    if (!res) return
-    const { cid } = res
+      title: v.title,
+      description: v.description,
+      links: v.links,
+    });
+    if (!res) return;
+    const { cid } = res;
 
     await writeContractAsync({
-      address:      POLL_ADDRESS,
-      abi:          POLL_ABI,
+      address: ADDRESS,
+      abi: ABI,
       functionName: 'createTopic',
-      args:         [cid, endS],
-      chainId:      sepolia.id,
-    })
+      args: [cid, duration], // <-- duration, not timestamp
+      chainId: sepolia.id,
+    });
 
-    reset()
-  })
+    reset();
+  });
 
   const isBusy =
     isSubmitting || isPinning || txStatus === 'pending' || isMining
