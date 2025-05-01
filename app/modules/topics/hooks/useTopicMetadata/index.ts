@@ -1,0 +1,1 @@
+export { useTopicMetadata } from './useTopicMetadata'

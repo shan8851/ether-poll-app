@@ -13,3 +13,9 @@ export interface Topic {
   yesVotes:     bigint
   noVotes:      bigint
 }
+
+export type TopicMetadata = {
+  title: string;
+  description?: string;
+  links?: { name: string; url: string }[];
+};
