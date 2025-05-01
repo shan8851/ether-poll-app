@@ -1,0 +1,1 @@
+export { pinata } from './pinata';

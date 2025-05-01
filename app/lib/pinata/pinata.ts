@@ -1,4 +1,3 @@
-// lib/pinata.ts
 "server only";
 
 import { PinataSDK } from "pinata";

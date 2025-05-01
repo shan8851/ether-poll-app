@@ -3,7 +3,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from 'react-hot-toast';
 import { WagmiProvider } from "wagmi";
-import { wagmiConfig } from "../config/wagmiConfig";
+import { wagmiConfig } from "../../../../config/wagmiConfig";
 
 export interface IProvidersProps {
   children?: React.ReactNode;

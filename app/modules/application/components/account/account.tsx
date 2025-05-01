@@ -1,10 +1,10 @@
 "use client";
 
 import { useAccount, useDisconnect } from "wagmi";
-import { ConnectDialog } from "./connectDialog";
-import { shortenAddress } from "../utils/shortenAddress";
+import { ConnectDialog } from "../connectDialog/connectDialog";
+import { shortenAddress } from "@/app/modules/application/utils/shortenAddress";
 
-export const Account = () => {
+export const Account: React.FC = () => {
   const { address } = useAccount();
   const { disconnect } = useDisconnect();
 

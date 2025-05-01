@@ -3,40 +3,25 @@
 import { useMemo } from 'react'
 import { useReadContract, useReadContracts } from 'wagmi'
 import type { Abi } from 'abitype'
-import fullAbi from '../abis/EtherPoll.json'
+import fullAbi from '../../../../abis/EtherPoll.json'
 import { useQuery } from '@tanstack/react-query'
+import { Topic, TopicTuple } from './types'
 
-/* ─────────────────────────── tuple & object types ─ */
-type TopicTuple = readonly [
-  `0x${string}`, // creator
-  string,        // metadataCid
-  bigint,        // endTimestamp
-  bigint,        // yesVotes
-  bigint         // noVotes
-]
 
-interface Topic {
-  creator:      `0x${string}`
-  metadataCid:  string
-  endTimestamp: number      // seconds (easier for JS)
-  yesVotes:     bigint
-  noVotes:      bigint
-}
 
 /* ─────────────────────────── constants ─ */
-const ABI: Abi   = fullAbi.abi as Abi
-const ADDR       = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`
-const gateway    =
-  process.env.NEXT_PUBLIC_GATEWAY_URL ?? 'https://maroon-aesthetic-tern-670.mypinata.cloud/ipfs/'
+const ABI: Abi = fullAbi.abi as Abi
+const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`
+const GATEWAY= process.env.NEXT_PUBLIC_GATEWAY_URL!
 
 const fetchJson = (cid: string) =>
-  fetch(`${gateway}${cid}`).then(r => r.json())
+  fetch(`${GATEWAY}${cid}`).then(r => r.json())
 
 /* ─────────────────────────── component ─ */
-export function TopicsFeed() {
+export const TopicsList: React.FC = () => {
   /* 1 — how many topics? */
   const { data: nextId } = useReadContract({
-    address: ADDR,
+    address: CONTRACT_ADDRESS,
     abi:     ABI,
     functionName: 'nextTopicId',
   })
@@ -50,7 +35,7 @@ export function TopicsFeed() {
   } = useReadContracts({
     allowFailure: false,
     contracts: ids.map(id => ({
-      address: ADDR,
+      address: CONTRACT_ADDRESS,
       abi:     ABI,
       functionName: 'topics',
       args:    [BigInt(id)] as const,

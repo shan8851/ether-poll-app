@@ -1,5 +1,5 @@
-import { Account } from "./account"
-import { CreateTopicDialog } from './createTopicDialog/createTopicDialog';
+import { Account } from "@/app/modules/application/components/account";
+import { CreateTopicDialog } from "@/app/modules/topics/components/createTopicDialog";
 
 export const Header: React.FC = () => {
   return (

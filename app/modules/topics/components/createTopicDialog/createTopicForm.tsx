@@ -7,14 +7,14 @@
 'use client'
 
 import { useForm, useFieldArray } from 'react-hook-form'
-import { usePinJson } from '../../hooks/usePinJson'
+import { usePinJson } from '../../../application/hooks/usePinJson'
 import {
   useAccount,
   useWriteContract,
   useWaitForTransactionReceipt,
 } from 'wagmi'
 import type { Abi, Address } from 'abitype'
-import fullAbi from '../../abis/EtherPoll.json'
+import fullAbi from '../../../../abis/EtherPoll.json'
 import { sepolia } from 'viem/chains'
 import { DateTime } from 'luxon'
 
