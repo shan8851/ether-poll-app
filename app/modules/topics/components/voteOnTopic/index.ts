@@ -1,0 +1,1 @@
+export { VoteOnTopic } from './voteOnTopic'

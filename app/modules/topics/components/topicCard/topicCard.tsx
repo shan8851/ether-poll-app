@@ -1,7 +1,10 @@
-import { useTopicMetadata } from '../../../hooks/useTopicMetadata';
-import { LoadingTopics } from './loadingTopics';
+import { useAccount } from 'wagmi';
+import { useTopicMetadata } from '../../hooks/useTopicMetadata';
+import { LoadingTopics } from '../loadingTopics/loadingTopics';
+import { VoteOnTopic } from '../voteOnTopic';
+import { VoteStats } from '../voteStats/voteStats';
 
-interface ITopicCardProps {
+export interface ITopicCardProps {
   topicId: number;
   yesVotes: string;
   noVotes: string;
@@ -11,6 +14,8 @@ interface ITopicCardProps {
 
 export const TopicCard: React.FC<ITopicCardProps> = (props) => {
   const { cid, topicId, yesVotes, noVotes, endTimestamp } = props;
+
+  const { address } = useAccount();
 
   const { metadata, isMetaLoading } = useTopicMetadata({ cid });
 
@@ -24,7 +29,7 @@ export const TopicCard: React.FC<ITopicCardProps> = (props) => {
       <header className="space-y-1">
         <h3 className="text-xl font-semibold break-words">{title}</h3>
         {description && (
-          <p className="text-text line-clamp-3">{description}</p>
+          <p className="text-textTertiary line-clamp-3">{description}</p>
         )}
       </header>
 
@@ -43,16 +48,14 @@ export const TopicCard: React.FC<ITopicCardProps> = (props) => {
           ))}
         </ul>
       )}
+      <VoteStats yesCount={Number(yesVotes)} noCount={Number(noVotes)} />
+      {!address && <p>Connect your wallet to have your say!</p>}
+     {address && <VoteOnTopic />}
 
-      <footer className="text-xs text-text flex justify-between pt-2">
-        <span>ID&nbsp;#{topicId}</span>
-        <span>
-          yes {yesVotes.toString()} / no {noVotes.toString()}
-          {' · closes '}
-          {new Date(endTimestamp * 1_000).toLocaleDateString(undefined, {
+      <footer className="text-xs text-textTertiary flex justify-between pt-2">
+        <span>ID&nbsp;#{topicId} - Ends: {new Date(endTimestamp * 1_000).toLocaleDateString(undefined, {
             dateStyle: 'medium',
-          })}
-        </span>
+          })}</span>
       </footer>
     </article>
   );

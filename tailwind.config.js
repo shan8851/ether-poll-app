@@ -20,6 +20,7 @@ module.exports = {
         border: '#6272a4',
         text: '#f8f8f2',
         textSecondary: '#6272a4',
+        textTertiary: '#a1adc9',
       },
       borderRadius: {
         DEFAULT: '0.75rem', // 12px rounded, consistent but modern

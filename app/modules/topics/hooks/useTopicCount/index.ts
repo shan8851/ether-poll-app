@@ -1,1 +1,1 @@
-export { useTopicCount, type IUseTopicCountParams } from './useTopicCount'
+export { useTopicCount } from './useTopicCount';

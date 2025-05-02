@@ -1,59 +1,35 @@
-/* app/components/CreateTopicForm.tsx
-   Client-side form that:
-   1. pins the topic metadata to IPFS via usePinJson (Pinata/JWT)
-   2. writes the CID + end-date (UTC-seconds) to the EtherPoll contract
-   3. waits for the tx receipt and surfaces each async stage in the UI                */
+'use client';
 
-'use client'
-
-import { useForm, useFieldArray } from 'react-hook-form'
-import { usePinJson } from '../../../application/hooks/usePinJson'
+import { useForm, useFieldArray } from 'react-hook-form';
+import { usePinJson } from '../../../application/hooks/usePinJson';
 import {
   useAccount,
   useWriteContract,
   useWaitForTransactionReceipt,
-} from 'wagmi'
-import type { Abi, Address } from 'abitype'
-import fullAbi from '../../../../abis/EtherPoll.json'
-import { sepolia } from 'viem/chains'
-import { DateTime } from 'luxon'
+} from 'wagmi';
+import { sepolia } from 'viem/chains';
+import { DateTime } from 'luxon';
+import { ABI, CONTRACT_ADDRESS } from '@/app/modules/application/constants';
+import { FormValues } from './types';
 
-/* ─────────────────────────────────────────────────── types & constants ── */
-type LinkItem = { name: string; url: string }
+const MAX_S = 90 * 24 * 60 * 60; // 90 days
 
-interface FormValues {
-  title: string
-  description: string
-  endDate: string        // yyyy-mm-dd from <input type="date">
-  links: LinkItem[]
-}
-
-const ABI: Abi = fullAbi.abi as Abi
-const ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as Address
-const MAX_S = 90 * 24 * 60 * 60    // 90 days
-
-/* ─────────────────────────────────────────────────── component ───────── */
 export function CreateTopicForm() {
-  const { address } = useAccount()
+  const { address } = useAccount();
 
-  const {
-    pinJson,
-    loading: isPinning,
-    error:   pinError,
-  } = usePinJson()
+  const { pinJson, loading: isPinning, error: pinError } = usePinJson();
 
   const {
     writeContractAsync,
-    data:   txHash,
-    error:  txError,
-    status: txStatus,                         // idle | pending | error | success
-  } = useWriteContract()
+    data: txHash,
+    error: txError,
+    status: txStatus,
+  } = useWriteContract();
 
-  const { data: receipt, isLoading: isMining } =
-    useWaitForTransactionReceipt({
-      hash:  txHash,
-      query: { enabled: Boolean(txHash) },
-    })
+  const { data: receipt, isLoading: isMining } = useWaitForTransactionReceipt({
+    hash: txHash,
+    query: { enabled: Boolean(txHash) },
+  });
 
   const {
     register,
@@ -63,19 +39,18 @@ export function CreateTopicForm() {
     reset,
   } = useForm<FormValues>({
     defaultValues: {
-      title:       '',
+      title: '',
       description: '',
-      endDate:     '',
-      links:       [],
+      endDate: '',
+      links: [],
     },
-  })
+  });
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'links',
-  })
+  });
 
-  /* ─────────────────────────────────────────── submit handler ───────── */
   const onSubmit = handleSubmit(async (v) => {
     if (!address) throw new Error('Connect your wallet');
 
@@ -97,7 +72,7 @@ export function CreateTopicForm() {
     const { cid } = res;
 
     await writeContractAsync({
-      address: ADDRESS,
+      address: CONTRACT_ADDRESS,
       abi: ABI,
       functionName: 'createTopic',
       args: [cid, duration], // <-- duration, not timestamp
@@ -108,18 +83,16 @@ export function CreateTopicForm() {
   });
 
   const isBusy =
-    isSubmitting || isPinning || txStatus === 'pending' || isMining
+    isSubmitting || isPinning || txStatus === 'pending' || isMining;
 
-  /* ─────────────────────────────────────────────── UI ───────────────── */
   return (
     <form
       onSubmit={onSubmit}
       className="space-y-4 p-6 bg-surface text-text rounded shadow"
     >
       {pinError && <p className="text-red">{`Pin: ${pinError.message}`}</p>}
-      {txError  && <p className="text-red">{`Tx:  ${txError.message}`}</p>}
+      {txError && <p className="text-red">{`Tx:  ${txError.message}`}</p>}
 
-      {/* title */}
       <div>
         <label className="block font-medium mb-1">Title</label>
         <input
@@ -133,7 +106,6 @@ export function CreateTopicForm() {
         {errors.title && <p className="text-red">{errors.title.message}</p>}
       </div>
 
-      {/* description */}
       <div>
         <label className="block font-medium mb-1">Description</label>
         <textarea
@@ -150,7 +122,6 @@ export function CreateTopicForm() {
         )}
       </div>
 
-      {/* links */}
       <div>
         <label className="block font-medium">Links</label>
         {fields.map((f, i) => (
@@ -200,7 +171,6 @@ export function CreateTopicForm() {
         </button>
       </div>
 
-      {/* end date */}
       <div>
         <label className="block font-medium mb-1">End Date</label>
         <input
@@ -211,12 +181,9 @@ export function CreateTopicForm() {
                      focus:outline-none focus:ring-2 focus:ring-purple"
           disabled={isBusy}
         />
-        {errors.endDate && (
-          <p className="text-red">{errors.endDate.message}</p>
-        )}
+        {errors.endDate && <p className="text-red">{errors.endDate.message}</p>}
       </div>
 
-      {/* submit */}
       <button
         type="submit"
         disabled={isBusy}
@@ -232,12 +199,11 @@ export function CreateTopicForm() {
           : 'Create Topic'}
       </button>
 
-      {/* confirmation */}
       {receipt && (
         <p className="mt-2 text-green">
           {`✅ Mined in block #${receipt.blockNumber}`}
         </p>
       )}
     </form>
-  )
+  );
 }
