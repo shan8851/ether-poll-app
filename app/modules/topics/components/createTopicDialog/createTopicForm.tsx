@@ -1,7 +1,7 @@
 'use client';
 
 import { ABI, CONTRACT_ADDRESS } from '@/app/modules/application/constants';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { sepolia } from 'viem/chains';
@@ -30,6 +30,8 @@ export interface ICreateTopicFormProps {
 export const CreateTopicForm: React.FC<ICreateTopicFormProps> = ({
   onClose,
 }) => {
+  const hasNotified = useRef(false);
+
   const { address } = useAccount();
   const { pinJson, loading: isPinning, error: pinError } = usePinJson();
 
@@ -75,6 +77,8 @@ export const CreateTopicForm: React.FC<ICreateTopicFormProps> = ({
       throw new Error('Invalid duration selected');
     }
 
+    hasNotified.current = false;
+
     const res = await pinJson({
       title: v.title,
       description: v.description,
@@ -99,19 +103,27 @@ export const CreateTopicForm: React.FC<ICreateTopicFormProps> = ({
 
   useEffect(() => {
     const label = isPinning
-      ? 'Pinning data to IPFS…'
+      ? '📦 Pinning data to IPFS…'
       : txStatus === 'pending'
-      ? 'Sending transaction…'
+      ? '📝 Awaiting wallet signature...'
       : isMining
-      ? 'Confirming transaction…'
+      ? '⛏️ Confirming on-chain…'
       : '';
+
     if (!receipt && (isPinning || txStatus === 'pending' || isMining)) {
-      toast(label);
+      toast.loading(label, {
+        id: 'status-toast',
+        duration: Infinity,
+      });
     }
 
-    if (receipt) {
+    if (receipt && !isMining && !hasNotified.current) {
+      hasNotified.current = true;
+
+      toast.dismiss('status-toast');
+
       blockExplorerToast({
-        label: 'Topic created!',
+        label: '✅ Topic created!',
         hash: receipt.transactionHash,
       });
 
