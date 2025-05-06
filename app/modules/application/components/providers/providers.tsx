@@ -9,17 +9,13 @@ export interface IProvidersProps {
   children?: React.ReactNode;
 }
 
-export const Providers: React.FC<IProvidersProps> = (props) => {
-  const { children } = props;
-
+export const Providers: React.FC<IProvidersProps> = ({ children }) => {
   const queryClient = new QueryClient();
 
   return (
     <WagmiProvider config={wagmiConfig}>
-        <Toaster />
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
+      <Toaster position="top-right" toastOptions={{ duration: 15000 }} />
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </WagmiProvider>
   );
 };

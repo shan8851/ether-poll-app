@@ -1,22 +1,28 @@
 'use client';
 
-import { useForm, useFieldArray } from 'react-hook-form';
-import { usePinJson } from '../../../application/hooks/usePinJson';
+import { ABI, CONTRACT_ADDRESS } from '@/app/modules/application/constants';
+import { DateTime } from 'luxon';
+import { useEffect } from 'react';
+import { useFieldArray, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { sepolia } from 'viem/chains';
 import {
   useAccount,
-  useWriteContract,
   useWaitForTransactionReceipt,
+  useWriteContract,
 } from 'wagmi';
-import { sepolia } from 'viem/chains';
-import { DateTime } from 'luxon';
-import { ABI, CONTRACT_ADDRESS } from '@/app/modules/application/constants';
+import { usePinJson } from '../../../application/hooks/usePinJson';
 import { FormValues } from './types';
+import { blockExplorerToast } from '@/app/modules/application/components/blockExplorerToast';
 
 const MAX_S = 90 * 24 * 60 * 60; // 90 days
 
-export function CreateTopicForm() {
-  const { address } = useAccount();
+export interface ICreateTopicFormProps {
+  onClose: () => void;
+}
 
+export const CreateTopicForm: React.FC<ICreateTopicFormProps> = ({ onClose }) => {
+  const { address } = useAccount();
   const { pinJson, loading: isPinning, error: pinError } = usePinJson();
 
   const {
@@ -85,14 +91,42 @@ export function CreateTopicForm() {
   const isBusy =
     isSubmitting || isPinning || txStatus === 'pending' || isMining;
 
+  useEffect(() => {
+    const label = isPinning
+      ? 'Pinning data to IPFS…'
+      : txStatus === 'pending'
+      ? 'Sending transaction…'
+      : isMining
+      ? 'Confirming transaction…'
+      : '';
+    if (!receipt && (isPinning || txStatus === 'pending' || isMining)) {
+      toast(label);
+    }
+
+    if (receipt) {
+      blockExplorerToast({
+        label: 'Topic created!',
+        hash: receipt.transactionHash,
+      });
+
+      onClose();
+    }
+  }, [isBusy, isMining, txStatus, isPinning, receipt, onClose]);
+
+  useEffect(() => {
+    if (pinError) {
+      toast.error(pinError.message);
+    }
+    if (txError) {
+      toast.error(txError.message);
+    }
+  }, [pinError, txError]);
+
   return (
     <form
       onSubmit={onSubmit}
       className="space-y-4 p-6 bg-surface text-text rounded shadow"
     >
-      {pinError && <p className="text-red">{`Pin: ${pinError.message}`}</p>}
-      {txError && <p className="text-red">{`Tx:  ${txError.message}`}</p>}
-
       <div>
         <label className="block font-medium mb-1">Title</label>
         <input
@@ -190,20 +224,8 @@ export function CreateTopicForm() {
         className="w-full py-3 bg-green text-background rounded shadow
                    hover:bg-green/90 disabled:opacity-40"
       >
-        {isPinning
-          ? 'Pinning…'
-          : txStatus === 'pending'
-          ? 'Sending…'
-          : isMining
-          ? 'Confirming…'
-          : 'Create Topic'}
+        Create topic
       </button>
-
-      {receipt && (
-        <p className="mt-2 text-green">
-          {`✅ Mined in block #${receipt.blockNumber}`}
-        </p>
-      )}
     </form>
   );
-}
+};

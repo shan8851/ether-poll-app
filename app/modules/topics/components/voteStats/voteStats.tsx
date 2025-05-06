@@ -1,5 +1,5 @@
-import React from 'react';
-import { VoteBar } from './voteBar';
+import React from "react";
+import { VoteBar } from "./voteBar";
 
 export interface VoteStatsProps {
   yesCount: number;
@@ -13,19 +13,8 @@ export const VoteStats: React.FC<VoteStatsProps> = ({ yesCount, noCount }) => {
 
   return (
     <div className="my-4">
-      <VoteBar
-        label="Yes"
-        count={yesCount}
-        value={yesPercent}
-        color="green"
-        showEmptyMessage={total === 0}
-      />
-      <VoteBar
-        label="No"
-        count={noCount}
-        value={noPercent}
-        color="red"
-      />
+      <VoteBar label="Yes" count={yesCount} value={yesPercent} color="green" />
+      <VoteBar label="No" count={noCount} value={noPercent} color="red" />
     </div>
   );
 };

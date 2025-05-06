@@ -1,1 +1,1 @@
-export { LoadingTopics } from './loadingTopics'
+export { SkeletonItem } from './loadingTopics';
