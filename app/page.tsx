@@ -1,11 +1,9 @@
 import { Description } from './modules/application/components/description';
-import { Header } from './modules/application/components/header';
 import { TopicsList } from './modules/topics/components/topicsList';
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen py-2 space-y-4 px-8">
-      <Header />
+    <div className="w-full px-4 sm:px-8 max-w-5xl mx-auto py-6 space-y-6">
       <Description />
       <TopicsList />
     </div>

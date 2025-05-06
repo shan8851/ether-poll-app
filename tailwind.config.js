@@ -7,26 +7,24 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-sans)', 'sans-serif'],
+      },
       colors: {
-        background: '#282a36',
-        purple: '#bd93f9',
-        green: '#50fa7b',
-        orange: '#ffb86c',
-        pink: '#ff79c6',
-        red: '#ff5555',
-        yellow: '#f1fa8c',
-        cyan: '#8be9fd',
-        surface: '#44475a',
-        border: '#6272a4',
+        background: '#1e1f29', // deeper Dracula
+        surface: '#2b2d3c', // card background
+        border: '#3f4154', // less saturated border
         text: '#f8f8f2',
-        textSecondary: '#6272a4',
-        textTertiary: '#a1adc9',
-      },
-      borderRadius: {
-        DEFAULT: '0.75rem', // 12px rounded, consistent but modern
-      },
-      boxShadow: {
-        DEFAULT: '0 2px 10px rgba(0, 0, 0, 0.5)', // subtle but noticeable
+        textSecondary: '#a0aec0', // softened
+        textTertiary: '#718096', // cooler gray-blue
+
+        green: '#4ade80', // Tailwind emerald-400
+        red: '#f87171', // Tailwind red-400
+        orange: '#fbbf24', // Tailwind amber-400
+        yellow: '#facc15', // more readable than f1fa8c
+        purple: '#c084fc', // Tailwind purple-400
+        pink: '#f472b6', // softened neon
+        cyan: '#67e8f9', // soft cyan
       },
     },
   },

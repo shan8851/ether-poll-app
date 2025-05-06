@@ -3,11 +3,12 @@
 @tailwind utilities;
 
 @layer base {
-    html,
-    body {
-        @apply h-full m-0;
-    }
-    body {
-        @apply bg-background text-text font-mono;
-    }
+  html,
+  body {
+    @apply h-full w-full m-0 p-0 overflow-x-hidden;
+  }
+
+  body {
+    @apply bg-background text-text font-sans antialiased;
+  }
 }

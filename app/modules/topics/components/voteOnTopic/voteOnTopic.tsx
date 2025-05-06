@@ -45,18 +45,18 @@ export const VoteOnTopic: React.FC<IVoteOnTopicProps> = ({ topicId }) => {
   return (
     <div className="flex gap-4 mt-4">
       <button
-        className="bg-green text-background px-4 py-2 rounded hover:bg-green/70"
+        className="px-5 py-2 rounded-full text-sm font-semibold border border-green text-green hover:bg-green/10 transition disabled:opacity-50"
         disabled={isLoading}
         onClick={() => onVote(true)}
       >
-        YES
+        ✅ Yes
       </button>
       <button
-        className="bg-red text-background px-4 py-2 rounded hover:bg-red/70"
+        className="px-5 py-2 rounded-full text-sm font-semibold border border-red text-red hover:bg-red/10 transition disabled:opacity-50"
         disabled={isLoading}
         onClick={() => onVote(false)}
       >
-        NO
+        ❌ No
       </button>
     </div>
   );

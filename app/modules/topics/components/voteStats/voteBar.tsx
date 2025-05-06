@@ -20,17 +20,17 @@ export const VoteBar: React.FC<VoteBarProps> = ({ label, value, count, color }) 
       <div className="flex justify-between text-sm text-textSecondary mb-1">
         <span>{label}</span>
         <span>
-          {count} vote{count !== 1 ? "s" : ""} · {hasVotes ? `${value}%` : "0%"}
+          {count} vote{count !== 1 ? 's' : ''} · {hasVotes ? `${value}%` : '0%'}
         </span>
       </div>
-
-      <div className="w-full h-3 bg-background rounded overflow-hidden">
-        {hasVotes && (
-          <div
-            className={clsx("h-full transition-all duration-500 ease-in-out", bgColor)}
-            style={{ width: `${value}%` }}
-          />
-        )}
+      <div className="w-full h-3 bg-zinc-800 rounded-full overflow-hidden">
+        <div
+          className={clsx(
+            'h-full rounded-full transition-all duration-500 ease-in-out',
+            bgColor
+          )}
+          style={{ width: `${value}%` }}
+        />
       </div>
     </div>
   );

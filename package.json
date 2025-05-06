@@ -1,7 +1,14 @@
 {
   "name": "ether-poll-app",
   "version": "0.1.0",
+  "author": "shan8851 <asamshan456@gmail.com>",
   "private": true,
+  "license": "MIT",
+  "description": "Vote on Ethereum's spiciest topics. One wallet, one vote. Zero noise, all signal.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shan8851/ether-poll-app.git"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -10,7 +17,6 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.74.8",
-    "luxon": "^3.6.1",
     "next": "15.3.1",
     "pinata": "^2.2.1",
     "radix-ui": "^1.3.4",

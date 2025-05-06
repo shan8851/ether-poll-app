@@ -62,10 +62,10 @@ export const TopicsList: React.FC = () => {
   if (count > 0 && topics.length === 0) return <EmptyList />;
 
   return (
-    <div className="space-y-8 mt-8">
+    <div className="space-y-8 mt-8 mx-auto max-w-5xl w-full">
       {activeTopics.length > 0 && (
         <section>
-          <h2 className="text-2xl font-semibold mb-4">Active Topics</h2>
+          <h2 className="text-2xl font-semibold mb-4">🟢 Active Topics</h2>
           <div className="grid gap-6">
             {activeTopics.map((t) => (
               <TopicCard
@@ -83,7 +83,7 @@ export const TopicsList: React.FC = () => {
 
       {expiredTopics.length > 0 && (
         <section>
-          <h2 className="text-2xl font-semibold mb-4">Expired Topics</h2>
+          <h2 className="text-2xl font-semibold mb-4">⏳ Expired Topics</h2>
           <div className="grid gap-6">
             {expiredTopics.map((t) => (
               <TopicCard
