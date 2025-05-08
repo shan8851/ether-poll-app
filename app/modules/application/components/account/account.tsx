@@ -1,18 +1,36 @@
 'use client';
 
 import { Popover } from 'radix-ui';
-import { useAccount, useDisconnect, useEnsName, useEnsAvatar } from 'wagmi';
+import {
+  useAccount,
+  useDisconnect,
+  useEnsName,
+  useEnsAvatar,
+  useSwitchChain,
+} from 'wagmi';
 import { shortenAddress } from '@/app/modules/application/utils/shortenAddress';
 import { ConnectDialog } from '../connectDialog/connectDialog';
 import Image from 'next/image';
+import { sepolia } from 'viem/chains';
 
 export const Account: React.FC = () => {
-  const { address } = useAccount();
+  const { address, chainId } = useAccount();
   const { disconnect } = useDisconnect();
   const { data: ens } = useEnsName({ address, chainId: 1 });
   const { data: avatar } = useEnsAvatar({ name: ens ?? undefined, chainId: 1 });
+  const { switchChain } = useSwitchChain();
 
   if (!address) return <ConnectDialog />;
+
+  if (chainId !== sepolia.id)
+    return (
+      <button
+        onClick={() => switchChain({ chainId: sepolia.id })}
+        className="bg-purple text-background px-4 py-2 font-bold rounded hover:bg-purple/75"
+      >
+        Switch to Sepolia
+      </button>
+    );
 
   return (
     <Popover.Root>

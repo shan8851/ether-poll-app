@@ -5,6 +5,8 @@ import { TopicHeader } from './components/topicHeader';
 import { TopicLinks } from './components/topicLinks';
 import { VoteInfo } from './components/voteInfo';
 import { TopicFooter } from './components/topicFooter';
+import clsx from 'clsx';
+
 
 export interface ITopicCardProps {
   topicId: number;
@@ -35,7 +37,13 @@ export const TopicCard: React.FC<ITopicCardProps> = ({
   if (!metadata) return null;
 
   return (
-    <article className="bg-surface p-6 rounded-2xl shadow-md space-y-5 text-text border border-border transition hover:shadow-">
+    <article
+      className={clsx(
+        'bg-surface p-6 rounded-2xl space-y-5 text-text border border-border transition ',
+        { 'hover:border-red': isExpired },
+        { 'hover:border-green': !isExpired }
+      )}
+    >
       <TopicHeader
         title={metadata.title}
         description={metadata.description}
