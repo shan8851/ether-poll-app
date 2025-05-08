@@ -1,0 +1,1 @@
+export { useTopicCardData } from './useTopicCardData';

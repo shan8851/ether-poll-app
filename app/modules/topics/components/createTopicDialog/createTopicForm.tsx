@@ -14,14 +14,7 @@ import { usePinJson } from '../../../application/hooks/usePinJson';
 import { FormValues } from './types';
 import { blockExplorerToast } from '@/app/modules/application/components/blockExplorerToast';
 import { Select } from 'radix-ui';
-
-const MAX_S = 90 * 24 * 60 * 60; // 90 days
-const DURATIONS = [
-  { label: '1 day', seconds: 86400 },
-  { label: '1 week', seconds: 7 * 86400 },
-  { label: '1 month', seconds: 30 * 86400 },
-  { label: '3 months', seconds: 90 * 86400 },
-];
+import { DURATIONS, MAX_SECONDS } from './constants';
 
 export interface ICreateTopicFormProps {
   onClose: () => void;
@@ -73,7 +66,7 @@ export const CreateTopicForm: React.FC<ICreateTopicFormProps> = ({
 
     const duration = Number(v.duration);
 
-    if (!duration || duration <= 0 || duration > MAX_S) {
+    if (!duration || duration <= 0 || duration > MAX_SECONDS) {
       throw new Error('Invalid duration selected');
     }
 
@@ -84,6 +77,7 @@ export const CreateTopicForm: React.FC<ICreateTopicFormProps> = ({
       description: v.description,
       links: v.links,
     });
+
     if (!res) return;
     const { cid } = res;
 
@@ -91,7 +85,7 @@ export const CreateTopicForm: React.FC<ICreateTopicFormProps> = ({
       address: CONTRACT_ADDRESS,
       abi: ABI,
       functionName: 'createTopic',
-      args: [cid, duration], // <-- duration, not timestamp
+      args: [cid, duration],
       chainId: sepolia.id,
     });
 
@@ -229,6 +223,7 @@ export const CreateTopicForm: React.FC<ICreateTopicFormProps> = ({
         <Select.Root
           onValueChange={(value) => setValue('duration', Number(value))}
           disabled={isBusy}
+          defaultValue={String(DURATIONS[0].seconds)}
         >
           <Select.Trigger
             className="w-full rounded-lg bg-background border border-border p-3 text-sm text-left

@@ -13,8 +13,5 @@ export const useTopicCount = () => {
   const count = Number(nextId ?? 0);
   const ids = [...Array(count).keys()];
 
-  return {
-    count,
-    ids,
-  };
+  return { count, ids };
 };

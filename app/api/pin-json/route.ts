@@ -8,8 +8,6 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    // validate payload here (zod, yup, etc.) if you wish
-
     const { cid } = await pinata.upload.public.json(body);
     const url = await pinata.gateways.public.convert(cid);
 

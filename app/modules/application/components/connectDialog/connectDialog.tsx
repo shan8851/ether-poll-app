@@ -13,7 +13,7 @@ export const ConnectDialog: React.FC = () => {
           aria-describedby={undefined}
           className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-surface border border-border rounded p-6"
         >
-          <Dialog.Title>Connect to Application</Dialog.Title>
+          <Dialog.Title className="pb-2 font-bold">Connect wallet</Dialog.Title>
           <WalletOptions />
         </Dialog.Content>
       </Dialog.Portal>

@@ -1,7 +1,6 @@
-// hooks/usePinJson.ts
-"use client";
+'use client';
 
-import { useCallback, useState } from "react";
+import { useCallback, useState } from 'react';
 
 interface PinResponse {
   cid: string;
@@ -9,17 +8,17 @@ interface PinResponse {
 }
 
 export function usePinJson() {
-  const [loading, setLoading]   = useState(false);
-  const [error, setError]       = useState<Error | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
   const pinJson = useCallback(async <T extends object>(data: T) => {
     setLoading(true);
     setError(null);
 
     try {
-      const res = await fetch("/api/pin-json", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/pin-json', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
 

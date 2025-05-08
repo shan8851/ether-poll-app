@@ -17,7 +17,7 @@ export const Account: React.FC = () => {
   return (
     <Popover.Root>
       <Popover.Trigger asChild>
-        <button className="flex items-center gap-2 px-3 py-1.5 bg-zinc-800 rounded-full hover:bg-zinc-700 transition border border-zinc-700">
+        <button className="flex items-center gap-2 px-3 py-1.5 bg-surface rounded-full hover:bg-surface/30 transition border border-border">
           {avatar ? (
             <Image
               src={avatar}
@@ -27,7 +27,7 @@ export const Account: React.FC = () => {
               className="size-7 rounded-full"
             />
           ) : (
-            <div className="size-7 bg-zinc-600 rounded-full" />
+            <div className="size-7 bg-surface rounded-full" />
           )}
           <span className="text-sm text-white">
             {ens ?? shortenAddress(address)}
@@ -36,10 +36,10 @@ export const Account: React.FC = () => {
       </Popover.Trigger>
       <Popover.Content
         sideOffset={8}
-        className="bg-zinc-900 border border-zinc-700 p-2 rounded-xl w-40 shadow-lg"
+        className="bg-surface border border-border p-2 rounded-xl w-40 shadow-lg"
       >
         <button
-          className="w-full text-left text-sm text-red-400 hover:text-red-300 transition"
+          className="w-full text-center text-sm text-red hover:text-red/70 transition"
           onClick={() => disconnect()}
         >
           Disconnect
