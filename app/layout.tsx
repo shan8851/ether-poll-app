@@ -8,9 +8,35 @@ import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
   title: 'EtherPoll',
-  description: 'Vote on hot topics in the ethereum ecosystem',
+  description:
+    'Vote on the hottest topics in the Ethereum ecosystem. Zero noise. All signal.',
   icons: {
     icon: '/favicon.png',
+  },
+  openGraph: {
+    title: 'EtherPoll',
+    description:
+      'Vote on the hottest topics in the Ethereum ecosystem. Zero noise. All signal.',
+    url: 'https://ether-poll-app.vercel.app',
+    siteName: 'Shan8851',
+    type: 'website',
+    locale: 'en_US',
+    images: [
+      {
+        url: 'https://ether-poll-app.vercel.app/og.png',
+        width: 1200,
+        height: 630,
+        alt: 'Shan8851 – Full Stack Web3 Engineer',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'EtherPoll',
+    description:
+      'Vote on the hottest topics in the Ethereum ecosystem. Zero noise. All signal.',
+    creator: '@shan8851',
+    images: ['https://ether-poll-app.vercel.app/og.png'],
   },
 };
 
