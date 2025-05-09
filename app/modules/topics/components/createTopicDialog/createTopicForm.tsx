@@ -4,7 +4,7 @@ import { ABI, CONTRACT_ADDRESS } from '@/app/modules/application/constants';
 import { useEffect, useRef } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { sepolia } from 'viem/chains';
+import { base } from 'viem/chains';
 import {
   useAccount,
   useWaitForTransactionReceipt,
@@ -15,6 +15,7 @@ import { FormValues } from './types';
 import { blockExplorerToast } from '@/app/modules/application/components/blockExplorerToast';
 import { Select } from 'radix-ui';
 import { DURATIONS, MAX_SECONDS } from './constants';
+import { useQueryClient } from '@tanstack/react-query';
 
 export interface ICreateTopicFormProps {
   onClose: () => void;
@@ -27,6 +28,8 @@ export const CreateTopicForm: React.FC<ICreateTopicFormProps> = ({
 
   const { address } = useAccount();
   const { pinJson, loading: isPinning, error: pinError } = usePinJson();
+
+  const queryClient = useQueryClient();
 
   const {
     writeContractAsync,
@@ -86,7 +89,7 @@ export const CreateTopicForm: React.FC<ICreateTopicFormProps> = ({
       abi: ABI,
       functionName: 'createTopic',
       args: [cid, duration],
-      chainId: sepolia.id,
+      chainId: base.id,
     });
 
     reset();
@@ -121,9 +124,16 @@ export const CreateTopicForm: React.FC<ICreateTopicFormProps> = ({
         hash: receipt.transactionHash,
       });
 
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          Array.isArray(query.queryKey) &&
+          (query.queryKey[0] === 'readContracts' ||
+            query.queryKey[0] === 'readContract'),
+      });
+
       onClose();
     }
-  }, [isBusy, isMining, txStatus, isPinning, receipt, onClose]);
+  }, [isBusy, isMining, txStatus, isPinning, receipt, onClose, queryClient]);
 
   useEffect(() => {
     if (pinError) {

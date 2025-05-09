@@ -11,7 +11,7 @@ import {
 import { shortenAddress } from '@/app/modules/application/utils/shortenAddress';
 import { ConnectDialog } from '../connectDialog/connectDialog';
 import Image from 'next/image';
-import { sepolia } from 'viem/chains';
+import { base } from 'viem/chains';
 
 export const Account: React.FC = () => {
   const { address, chainId } = useAccount();
@@ -22,13 +22,13 @@ export const Account: React.FC = () => {
 
   if (!address) return <ConnectDialog />;
 
-  if (chainId !== sepolia.id)
+  if (chainId !== base.id)
     return (
       <button
-        onClick={() => switchChain({ chainId: sepolia.id })}
+        onClick={() => switchChain({ chainId: base.id })}
         className="bg-purple text-background px-4 py-2 font-bold rounded hover:bg-purple/75"
       >
-        Switch to Sepolia
+        Switch to Base
       </button>
     );
 
@@ -45,7 +45,7 @@ export const Account: React.FC = () => {
               className="size-7 rounded-full"
             />
           ) : (
-            <div className="size-7 bg-surface rounded-full" />
+            <div className="size-7 bg-orange/60 rounded-full" />
           )}
           <span className="text-sm text-white">
             {ens ?? shortenAddress(address)}

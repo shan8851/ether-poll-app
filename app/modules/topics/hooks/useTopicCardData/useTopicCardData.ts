@@ -1,7 +1,7 @@
 import { useAccount } from 'wagmi'
 import { useReadContract } from 'wagmi'
 import { ABI, CONTRACT_ADDRESS } from '@/app/modules/application/constants'
-import { sepolia } from 'viem/chains'
+import { base } from 'viem/chains';
 import { useTopicMetadata } from '../useTopicMetadata'
 
 export const useTopicCardData = (topicId: number, cid: string, endTs: number) => {
@@ -19,9 +19,9 @@ export const useTopicCardData = (topicId: number, cid: string, endTs: number) =>
     abi: ABI,
     functionName: 'hasUserVoted',
     args: [BigInt(topicId), address] as const,
-    chainId: sepolia.id,
+    chainId: base.id,
     query: { enabled: Boolean(address) && !isExpired },
-  })
+  });
 
   return {
     address,
