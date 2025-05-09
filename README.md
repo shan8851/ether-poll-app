@@ -1,7 +1,9 @@
+
 # 🔮 EtherPoll
 
-Vote on Ethereum’s spiciest topics. One wallet, one vote. Zero noise, all signal.
+![EtherPoll Banner](https://ether-poll-app.vercel.app/og.png)
 
+Vote on Ethereum’s spiciest topics. One wallet, one vote. Zero noise, all signal.
 
 ## 🧠 What is EtherPoll?
 
